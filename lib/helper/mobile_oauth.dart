@@ -30,7 +30,7 @@ class MobileOAuth extends CoreOAuth {
   /// will be returned, as long as we deem it still valid. In the event that
   /// both access and refresh tokens are invalid, the web gui will be used.
   @override
-  Future<void> login({bool refreshIfAvailable = false}) async {
+  Future<void> login({bool refreshIfAvailable = false, bool shouldUseCache = true}) async {
     await _removeOldTokenOnFirstLogin();
     await _authorization(refreshIfAvailable: refreshIfAvailable);
   }
@@ -59,23 +59,23 @@ class MobileOAuth extends CoreOAuth {
   /// still be valid. If there's no refresh token the existing access token
   /// will be returned, as long as we deem it still valid. In the event that
   /// both access and refresh tokens are invalid, the web gui will be used.
-  Future<Token> _authorization({bool refreshIfAvailable = false}) async {
-    var token = await _authStorage.loadTokenFromCache();
+  Future<Token> _authorization({bool refreshIfAvailable = false, bool shouldUseCache = true}) async {
+    var token;
+    if(shouldUseCache){
+      token = await _authStorage.loadTokenFromCache();
+      if (!refreshIfAvailable) {
+        if (token.hasValidAccessToken()) {
+          return token;
+        }
+      }
 
-    if (!refreshIfAvailable) {
-      if (token.hasValidAccessToken()) {
-        return token;
+      if (token.hasRefreshToken()) {
+        token = await _requestToken.requestRefreshToken(token.refreshToken!);
       }
     }
-
-    if (token.hasRefreshToken()) {
-      token = await _requestToken.requestRefreshToken(token.refreshToken!);
-    }
-
-    if (!token.hasValidAccessToken()) {
+    if (token == null || !token.hasValidAccessToken()) {
       token = await _performFullAuthFlow();
     }
-
     await _authStorage.saveTokenToCache(token);
     return token;
   }
