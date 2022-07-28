@@ -19,8 +19,8 @@ class AadOAuth {
   /// still be valid. If there's no refresh token the existing access token
   /// will be returned, as long as we deem it still valid. In the event that
   /// both access and refresh tokens are invalid, the web gui will be used.
-  Future<void> login({bool refreshIfAvailable = false}) =>
-      _coreOAuth.login(refreshIfAvailable: refreshIfAvailable);
+  Future<void> login({bool refreshIfAvailable = false, bool shouldUseCache = true}) =>
+      _coreOAuth.login(refreshIfAvailable: refreshIfAvailable,shouldUseCache : shouldUseCache);
 
   /// Retrieve cached OAuth Access Token.
   Future<String?> getAccessToken() async => _coreOAuth.getAccessToken();

@@ -68,7 +68,7 @@ class WebOAuth extends CoreOAuth {
   }
 
   @override
-  Future<void> login({bool refreshIfAvailable = false}) async {
+  Future<void> login({bool refreshIfAvailable = false,bool shouldUseCache = true}) async {
     final completer = Completer<void>();
 
     jsLogin(

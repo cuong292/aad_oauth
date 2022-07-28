@@ -9,7 +9,7 @@ import 'package:aad_oauth/model/config.dart';
 class CoreOAuth {
   CoreOAuth();
 
-  Future<void> login({bool refreshIfAvailable = false}) async {}
+  Future<void> login({bool refreshIfAvailable = false,bool shouldUseCache = true}) async {}
 
   Future<void> logout() async {}
 
