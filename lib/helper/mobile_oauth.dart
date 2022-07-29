@@ -32,7 +32,7 @@ class MobileOAuth extends CoreOAuth {
   @override
   Future<void> login({bool refreshIfAvailable = false, bool shouldUseCache = true}) async {
     await _removeOldTokenOnFirstLogin();
-    await _authorization(refreshIfAvailable: refreshIfAvailable);
+    await _authorization(refreshIfAvailable: refreshIfAvailable, shouldUseCache : shouldUseCache);
   }
 
   /// Retrieve cached OAuth Access Token.
